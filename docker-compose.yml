@@ -1,0 +1,32 @@
+version: "3.7"
+
+networks:
+  publicNetwork:
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: always
+    environment:
+      RABBITMQ_ERLANG_COOKIE: rabbitmq
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_DEFAULT_VHOST: /
+    networks:
+      - publicNetwork
+    ports:
+      - 15672:15672
+      - 5672:5672
+    volumes:
+      - ./data/rabbitmq:/var/lib/rabbitmq
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - 27017:27017
+    volumes:
+      - ./data/mongo:/data/db
