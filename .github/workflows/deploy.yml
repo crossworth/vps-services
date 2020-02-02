@@ -8,43 +8,42 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Copy docker-compose.yml
-      uses: garygrossgarten/github-action-scp@release
-      with:
-        local: docker-compose.yml
-        remote: /root/docker-compose.yml
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
-        password: ${{ secrets.SSH_PASSWORD }}
-    - name: Copy init.sh
-      uses: garygrossgarten/github-action-scp@release
-      with:
-        local: init.sh
-        remote: /root/init.sh
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
-        password: ${{ secrets.SSH_PASSWORD }}
-    - name: Copy .env.example
-      uses: garygrossgarten/github-action-scp@release
-      with:
-        local: .env.example
-        remote: /root/.env.example
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
-        password: ${{ secrets.SSH_PASSWORD }}
-    - name: Execute init.sh
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
-        password: ${{ secrets.SSH_PASSWORD }}
-        port: 22
-        script: chmod +x /root/init.sh && /root/init.sh
-    - name: Reload docker-compose
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
-        password: ${{ secrets.SSH_PASSWORD }}
-        port: 22
-        script: cd /root && docker-compose down && docker-compose up -d
+      - uses: actions/checkout@master
+      - name: Copy docker-compose.yml
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: docker-compose.yml
+          remote: /root/docker-compose.yml
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+      - name: Copy init.sh
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: init.sh
+          remote: /root/init.sh
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+      - name: Copy .env.example
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: .env.example
+          remote: /root/.env.example
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+      - name: Execute init.sh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: chmod +x /root/init.sh && /root/init.sh
+      - name: Reload docker-compose
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: cd /root && docker-compose down && docker-compose up -d

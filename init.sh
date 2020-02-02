@@ -5,4 +5,4 @@ ufw allow 5672
 ufw allow 27017
 ufw reload
 
-mkdir data
+mkdir -p data
